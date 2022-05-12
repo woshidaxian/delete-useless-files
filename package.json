@@ -8,5 +8,8 @@
     "start": "node index.js"
   },
   "author": "HWG",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.0.1"
+  }
 }
