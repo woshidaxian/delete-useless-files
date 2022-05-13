@@ -5,4 +5,3 @@
 const handleFile = require('./src/handleFile')
 
 const app = new handleFile()
-app.setProjectPath('aaa')
