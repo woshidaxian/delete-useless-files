@@ -1,5 +1,7 @@
 const type = require('./tools/type')
 const { err, info, warn } = require('./tools/log')
+const { getFileList } = require('./projectFileList')
+const fs = require('fs')
 
 class handleFile {
   // 项目路径projectPath；
@@ -17,7 +19,7 @@ class handleFile {
    * @param {?Array}  ignoreList
    */
   constructor(projectPath, delFileList, ignoreList) {
-    this.projectPath = projectPath ? projectPath : ''
+    this.projectPath = projectPath ? projectPath:''
     this.delFileList = delFileList ? delFileList : []
     this.ignoreList = ignoreList ? ignoreList : []
   }
@@ -28,10 +30,21 @@ class handleFile {
    */
   setProjectPath(path){
     if(type.isNull(path)){
-      err('缺少参数')
+      err('缺少项目路径参数')
       return
     }
-    this.projectPath = path
+    return new Promise((resolve, reject)=>{
+      fs.access(path, fs.constants.F_OK, (error) => {
+        if (error) {
+          err('项目文件不存在: ' + error)
+          reject(error)
+        } else {
+          resolve(true)
+          this.projectPath = path
+        }
+      })
+    })
+    
   }
 
   /**
@@ -98,7 +111,17 @@ class handleFile {
     if(this.projectPath==''){
       warn('暂未设置项目路径')
       return
+    }else{
+      return new Promise(async(resolve, reject)=>{
+        try {
+          const f = await getFileList(this.projectPath, true)
+          resolve(f)
+        } catch (error) {
+          reject(error)
+        }
+      })
     }
+    
   }
 
 }
