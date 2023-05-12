@@ -4,24 +4,22 @@ const { getFileList } = require('./projectFileList')
 const fs = require('fs')
 
 class handleFile {
-  // 项目路径projectPath；
-  projectPath = ''
-  // 待删除的文件列表delFileList；
-  delFileList = []
-  // 过滤不处理的文件夹ignoreList
-  ignoreList = []
-  // 读取的项目中的文件列表
-  fileList = []
-  
+  projectPath = null   // 项目路径projectPath
+  output = './useless-files-list.json' // 输出路径output
+  ignoreList = []   // 过滤不处理的文件夹ignoreList，相对路径
+  delete = false    // 是否获取结果后删除
+  fileSuffix = []   // 主要针对的文件的后缀，默认全部文件
+
   /**
-   * @param {?String} projectPath 
-   * @param {?Array}  delFileList
-   * @param {?Array}  ignoreList
+   * @param {Object} options
    */
-  constructor(projectPath, delFileList, ignoreList) {
-    this.projectPath = projectPath ? projectPath:''
-    this.delFileList = delFileList ? delFileList : []
-    this.ignoreList = ignoreList ? ignoreList : []
+  constructor(options) {
+    this.projectPath = options.projectPath ? options.projectPath : null
+    this.output = options.output ? options.output : this.output
+    this.ignoreList = options.ignoreList ? options.ignoreList : []
+    this.delete = options.delete ? options.delete : false
+    this.fileSuffix = options.fileSuffix ? options.fileSuffix : []
+    if(!this.projectPath) throw new Error('未配置项目路径 projectPath is need')
   }
 
   /**
